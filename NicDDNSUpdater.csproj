@@ -21,9 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="appsettings.example.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
