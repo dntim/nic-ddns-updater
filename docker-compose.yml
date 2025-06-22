@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  ddns-updater:
+    image: dntim/nic-ddns-updater:latest
+    container_name: nic-ddns-updater
+    restart: unless-stopped
+    secrets:
+      - ddns_username
+      - ddns_password
+    environment:
+      - TZ=UTC
+      # Configure hostnames via environment variables
+      - DDNS__Hostnames__0=example.com
+      - DDNS__Hostnames__1=www.example.com
+      - DDNS__Hostnames__2=api.example.com
+      - DDNS__UpdateIntervalSeconds=300
+    # volumes:
+    #   # Alternative: mount custom appsettings.json
+    #   - ./appsettings.json:/app/appsettings.json:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+secrets:
+  ddns_username:
+    file: ./secrets/ddns_username.txt
+  ddns_password:
+    file: ./secrets/ddns_password.txt

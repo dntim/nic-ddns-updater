@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  ddns-updater:
+    build: .
+    container_name: nic-ddns-updater-dev
+    restart: unless-stopped
+    environment:
+      - TZ=UTC
+      - DDNS__USERNAME=your_username_here
+      - DDNS__PASSWORD=your_password_here
+      - DDNS__Hostnames__0=example.com
+      - DDNS__Hostnames__1=www.example.com
+      - DDNS__Hostnames__2=api.example.com
+      - DDNS__UpdateIntervalSeconds=300
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
