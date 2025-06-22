@@ -1,0 +1,54 @@
+# Use this fileto deploy the DDNS Updater service with Docker Swarm.
+# It uses external secrets for username and password, and allows configuration of hostnames via environment variables
+# WATCHTOWER: This verison of the docker-compose file is intended for use with Watchtower, which automatically updates the container when a new image is available.
+
+version: '3.8'
+
+services:
+  ddns-updater:
+    image: dntim/nic-ddns-updater:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    secrets:
+      - ddns_username
+      - ddns_password
+    environment:
+      - TZ=UTC
+      # Configure hostnames via environment variables
+      - DDNS__Hostnames__0=example.com
+      - DDNS__Hostnames__1=www.example.com
+      - DDNS__Hostnames__2=api.example.com
+      - DDNS__UpdateIntervalSeconds=300
+    # volumes:
+    #   # Alternative: mount custom appsettings.json (if you don't want to use environment variables; NB! secrets are still a must)
+    #   - ./appsettings.json:/app/appsettings.json:ro
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+  watchtower:
+    image: containrrr/watchtower:latest
+    command: >
+      --interval 300         # check for new images every 5 minutes
+      --cleanup              # remove old images after upgrade
+      --label-enable         # only watch services with the above label
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+
+secrets:
+  ddns_username:
+    external: true
+  ddns_password:
+    external: true

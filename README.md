@@ -72,6 +72,8 @@ echo "your_password" | docker secret create ddns_password -
 docker stack deploy -c docker-compose.yml ddns-updater
 ```
 
+**Auto-Update with Watchtower:** For automatic updates when new releases are published, use `docker-compose.watchtower.yml` instead.
+
 ## Building from Source
 
 ```bash
