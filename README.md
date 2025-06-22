@@ -169,7 +169,6 @@ The included workflow (`.github/workflows/docker-image.yml`) builds and publishe
 **Supported Architectures:**
 - `linux/amd64` - Intel/AMD x64 systems
 - `linux/arm64` - ARM64/AArch64 (Raspberry Pi 4+, Apple Silicon, AWS Graviton, etc.)
-- `linux/arm/v7` - ARM32v7 (Raspberry Pi 2/3, older ARM devices)
 
 ## Configuration Examples
 
@@ -207,7 +206,6 @@ The Docker image supports multiple architectures and can run on:
 ### Hardware Platforms
 - **Intel/AMD x64**: Desktop computers, servers, cloud instances
 - **ARM64/AArch64**: Raspberry Pi 4+, Apple Silicon Macs, AWS Graviton, Oracle Ampere
-- **ARM32v7**: Raspberry Pi 2/3, older ARM single-board computers
 
 ### Host Operating Systems
 - **Linux**: Native Docker support
