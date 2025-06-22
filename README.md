@@ -120,5 +120,3 @@ MIT
 
 ---
 *Developed using GitHub Copilot and Claude Sonnet 4 (Preview)*
-  dntim/nic-ddns-updater:latest
-```
