@@ -1,10 +1,15 @@
+# Use this fileto deploy the DDNS Updater service with Docker Swarm.
+# It uses external secrets for username and password, and allows configuration of hostnames via environment variables
+
 version: '3.8'
 
 services:
   ddns-updater:
     image: dntim/nic-ddns-updater:latest
-    container_name: nic-ddns-updater
-    restart: unless-stopped
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
     secrets:
       - ddns_username
       - ddns_password
@@ -16,7 +21,7 @@ services:
       - DDNS__Hostnames__2=api.example.com
       - DDNS__UpdateIntervalSeconds=300
     # volumes:
-    #   # Alternative: mount custom appsettings.json
+    #   # Alternative: mount custom appsettings.json (if you don't want to use environment variables; NB! secrets are still a must)
     #   - ./appsettings.json:/app/appsettings.json:ro
     logging:
       driver: "json-file"
@@ -26,6 +31,6 @@ services:
 
 secrets:
   ddns_username:
-    file: ./secrets/ddns_username.txt
+    external: true
   ddns_password:
-    file: ./secrets/ddns_password.txt
+    external: true
