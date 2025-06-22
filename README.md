@@ -1,4 +1,5 @@
 # NIC.RU DDNS Updater
+## RU-Center DDNS Updater
 
 A Docker-compatible .NET 9 console application for updating DDNS records at NIC.RU with multi-architecture support for various platforms.
 
