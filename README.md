@@ -237,7 +237,7 @@ docker logs -f nic-ddns-updater
 
 ## Note about GenAI
 
-The whole solution has been developed using GitHub Copilot and Claude Sonnet 4 (Preview) model. Few manual edits have been made, mostly in the Readme file.
+The whole solution has been developed using `GitHub Copilot` and `Claude Sonnet 4 (Preview)` model. Few manual edits have been made, mostly in the `README.md` file.
 
 ## License
 
