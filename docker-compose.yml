@@ -2,8 +2,6 @@
 # Supports both Docker Swarm (with secrets) and regular docker-compose (with environment variables)
 # Configure hostnames via environment variables and credentials via secrets or environment variables
 
-version: '3.8'
-
 services:
   ddns-updater:
     image: dntim/nic-ddns-updater:latest
