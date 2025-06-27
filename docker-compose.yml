@@ -1,5 +1,6 @@
-# Use this fileto deploy the DDNS Updater service with Docker Swarm.
-# It uses external secrets for username and password, and allows configuration of hostnames via environment variables
+# Docker Compose configuration for NIC.RU DDNS Updater
+# Supports both Docker Swarm (with secrets) and regular docker-compose (with environment variables)
+# Configure hostnames via environment variables and credentials via secrets or environment variables
 
 version: '3.8'
 
