@@ -61,7 +61,7 @@ A Docker-compatible .NET 9 console application for updating DDNS records at NIC.
 
 2. Deploy with regular Docker Compose:
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
    Or deploy with simple Docker run:
@@ -85,7 +85,7 @@ View logs:
 docker service logs -f ddns_ddns-updater
 
 # For Docker Compose
-docker-compose logs -f ddns-updater
+docker compose logs -f ddns-updater
 
 # For regular container
 docker logs -f nic-ddns-updater

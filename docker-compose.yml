@@ -21,9 +21,14 @@ services:
       - ddns_password
     #
     # Option 2: Environment Variables (Works with regular docker-compose)
-    # Use: docker-compose up -d
+    # Use: docker compose up -d
     # Comment out the secrets section above and uncomment the username/password lines below
     environment:
+      # Update the time zone if you need the logging to be in the specificed time zone
+      # Examples:
+      # - TZ=Europe/London
+      # - TZ=Asia/Tokyo
+      # - TZ=America/New_York
       - TZ=UTC
       # Configure hostnames via environment variables
       - DDNS__Hostnames__0=example.com
