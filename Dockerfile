@@ -12,7 +12,7 @@ RUN dotnet restore
 COPY . .
 
 # Build and publish the application (framework-dependent, portable across architectures)
-RUN dotnet publish -c Release -o /app/publish --no-restore --no-self-contained
+RUN dotnet publish NicDDNSUpdater.csproj -c Release -o /app/publish --no-restore --no-self-contained
 
 # Final stage - runtime image (automatically pulls correct architecture)
 FROM mcr.microsoft.com/dotnet/runtime:9.0-bookworm-slim AS runtime
