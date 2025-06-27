@@ -11,20 +11,20 @@ A Docker-compatible .NET 9 console application for updating DDNS records at NIC.
 
 ## Security Model
 
-**⚠️ Important:** Credentials are provided via Docker secrets (production) or environment variables (development only). Never include credentials in configuration files.
+**⚠️ Important:** Credentials are provided via Docker secrets (typically recommended for production) or environment variables. Never include credentials in configuration files.
 
 ## Configuration
 
 | Setting | Description | Default | Environment Variable |
 |---------|-------------|---------|---------------------|
-| Username | NIC.RU username | - | `DDNS__USERNAME` or Docker secret `ddns_username` |
-| Password | NIC.RU password | - | `DDNS__PASSWORD` or Docker secret `ddns_password` |
+| Username | NIC.RU DDNS username | - | `DDNS__USERNAME` or Docker secret `ddns_username` |
+| Password | NIC.RU DDNS password | - | `DDNS__PASSWORD` or Docker secret `ddns_password` |
 | Hostnames | Array of hostnames to update | `[]` | `DDNS__Hostnames__0`, `DDNS__Hostnames__1`, etc. |
 | Update Interval | Update interval in seconds | `300` | `DDNS__UpdateIntervalSeconds` |
 
 ## Quick Start
 
-### Production (Docker Secrets)
+### Option 1: Docker Swarm Stack with Secrets
 
 1. Initialize Docker Swarm and create secrets:
    ```bash
@@ -33,7 +33,13 @@ A Docker-compatible .NET 9 console application for updating DDNS records at NIC.
    echo "your_password" | docker secret create ddns_password -
    ```
 
-2. Deploy with Docker service:
+2. Deploy with Docker Compose stack:
+   ```bash
+   # Edit docker-compose.yml to configure your hostnames
+   docker stack deploy -c docker-compose.yml ddns
+   ```
+
+   Or deploy with Docker service directly:
    ```bash
    docker service create \
      --name nic-ddns-updater \
@@ -46,46 +52,40 @@ A Docker-compatible .NET 9 console application for updating DDNS records at NIC.
      dntim/nic-ddns-updater:latest
    ```
 
-### Development (Environment Variables)
+### Option 2: Docker Compose with Environment Variables
 
-```bash
-docker run -d \
-  --name nic-ddns-updater \
-  --restart unless-stopped \
-  -e DDNS__USERNAME=your_username \
-  -e DDNS__PASSWORD=your_password \
-  -e DDNS__Hostnames__0=example.com \
-  -e DDNS__Hostnames__1=www.example.com \
-  -e DDNS__UpdateIntervalSeconds=300 \
-  dntim/nic-ddns-updater:latest
-```
+1. Edit `docker-compose.yml`:
+   - Comment out the `secrets` section
+   - Uncomment the username/password environment variables
+   - Optionally uncomment the Watchtower service for automatic updates
 
-### Docker Compose (with secrets)
+2. Deploy with regular Docker Compose:
+   ```bash
+   docker-compose up -d
+   ```
 
-Use the included `docker-compose.yml` file:
-```bash
-# Create secrets first
-echo "your_username" | docker secret create ddns_username -
-echo "your_password" | docker secret create ddns_password -
-
-# Deploy stack
-docker stack deploy -c docker-compose.yml ddns
-```
-
-## Building from Source
-
-```bash
-git clone https://github.com/dntim/nic-ddns-updater.git
-cd nic-ddns-updater
-docker-compose -f docker-compose.dev.yml up --build -d
-```
+   Or deploy with simple Docker run:
+   ```bash
+   docker run -d \
+     --name nic-ddns-updater \
+     --restart unless-stopped \
+     -e DDNS__USERNAME=your_username \
+     -e DDNS__PASSWORD=your_password \
+     -e DDNS__Hostnames__0=example.com \
+     -e DDNS__Hostnames__1=www.example.com \
+     -e DDNS__UpdateIntervalSeconds=300 \
+     dntim/nic-ddns-updater:latest
+   ```
 
 ## Monitoring
 
 View logs:
 ```bash
-# For Docker service
-docker service logs -f ddns-updater_ddns-updater
+# For Docker Swarm stack
+docker service logs -f ddns_ddns-updater
+
+# For Docker Compose
+docker-compose logs -f ddns-updater
 
 # For regular container
 docker logs -f nic-ddns-updater
@@ -101,7 +101,7 @@ docker secret ls
 docker secret rm ddns_username ddns_password
 echo "new_username" | docker secret create ddns_username -
 echo "new_password" | docker secret create ddns_password -
-docker service update --force ddns-updater_ddns-updater
+docker service update --force ddns_ddns-updater
 ```
 
 ## Platform Support

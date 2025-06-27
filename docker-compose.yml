@@ -10,9 +10,18 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+    # CREDENTIALS CONFIGURATION - Choose ONE of the following options:
+    # 
+    # Option 1: Docker Secrets (REQUIRES Docker Swarm stack deployment)
+    # Use: docker stack deploy -c docker-compose.yml ddns
+    # Keep the secrets section below and remove/comment the username/password environment variables
     secrets:
       - ddns_username
       - ddns_password
+    #
+    # Option 2: Environment Variables (Works with regular docker-compose)
+    # Use: docker-compose up -d
+    # Comment out the secrets section above and uncomment the username/password lines below
     environment:
       - TZ=UTC
       # Configure hostnames via environment variables
@@ -20,6 +29,9 @@ services:
       - DDNS__Hostnames__1=www.example.com
       - DDNS__Hostnames__2=api.example.com
       - DDNS__UpdateIntervalSeconds=300
+      # Uncomment these lines if using environment variables instead of secrets:
+      # - DDNS__USERNAME=your_nic_username
+      # - DDNS__PASSWORD=your_nic_password
     # volumes:
     #   # Alternative: mount custom appsettings.json (if you don't want to use environment variables; NB! secrets are still a must)
     #   - ./appsettings.json:/app/appsettings.json:ro
@@ -29,6 +41,24 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  # OPTIONAL: Watchtower for automatic updates
+  # Note: Only use this if you're NOT deploying as a Docker Swarm stack (docker stack deploy)
+  # Watchtower doesn't work with stack deployments - comment out this entire service if using stack
+  # If using docker-compose up instead of stack, you can uncomment this service
+  # watchtower:
+  #   image: containrrr/watchtower:latest
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   environment:
+  #     - WATCHTOWER_CLEANUP=true
+  #     - WATCHTOWER_INCLUDE_RESTARTING=true
+  #     - WATCHTOWER_SCHEDULE=0 0 2 * * *  # Check for updates daily at 2 AM
+  #   command: --label-enable
+  #   restart: unless-stopped
+  #   labels:
+  #     - "com.centurylinklabs.watchtower.enable=false"  # Don't update watchtower itself
+
+# Comment out this entire secrets section if using environment variables instead
 secrets:
   ddns_username:
     external: true
